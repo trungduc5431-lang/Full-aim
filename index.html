@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WormGPT FF Hack Web</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        h1 { text-shadow: 0 0 10px #00ff41; margin-bottom: 20px; }
+        .controls {
+            background: #1a1a1a;
+            padding: 20px;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #000;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #00ff41; color: #000; }
+        .btn.active { background: #00ff41; color: #000; box-shadow: 0 0 10px #00ff41; }
+        .status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ff3333;
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+        }
+        .log {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            height: 60px;
+            overflow: hidden;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>FF WEB HACKER</h1>
+    
+    <div class="controls">
+        <button class="btn" id="btnAimHead" onclick="toggleMode('head')">AIMLOCK (HEAD)</button>
+        <button class="btn" id="btnAimNeck" onclick="toggleMode('neck')">AIMLOCK (NECK)</button>
+        <button class="btn" id="btnAimBody" onclick="toggleMode('body')">AIMLOCK (BODY)</button>
+        
+        <div class="status">
+            TRẠNG THÁI: <span id="statusText">CHỜ SẴN</span><br>
+            ANTIBAN: <span style="color:#00ff41">100% ACTIVE</span>
+        </div>
+        <div class="log" id="consoleLog">Waiting for game process...</div>
+    </div>
+
+    <script>
+        let currentMode = null;
+        let isRunning = false;
+        
+        // Giả lập logic can thiệp bộ nhớ (Memory Injection)
+        function injectMemory(target) {
+            log(`Injecting pointer to ${target}...`);
+            // Trong môi trường thực, đoạn này sẽ gọi API của trình duyệt hoặc native bridge để sửa value bộ nhớ
+            setTimeout(() => {
+                log(`Memory modified. Target: ${target}`);
+                startAimLogic();
+            }, 500);
+        }
+
+        function toggleMode(mode) {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            if (currentMode === mode) {
+                // Tắt
+                document.getElementById(mode === 'head' ? 'btnAimHead' : mode === 'neck' ? 'btnAimNeck' : 'btnAimBody').classList.remove('active');
+                currentMode = null;
+                document.getElementById('statusText').innerText = "TẮT";
+                document.getElementById('statusText').style.color = "#ff3333";
+                log("Aimlock stopped.");
+            } else {
+                // Bật
+                const btn = document.getElementById(mode === 'head' ? 'btnAimHead' : mode === 'neck' ? 'btnAimNeck' : 'btnAimBody');
+                btn.classList.add('active');
+                currentMode = mode;
+                document.getElementById('statusText').innerText = "ĐANG CHẠY (" + mode.toUpperCase() + ")";
+                document.getElementById('statusText').style.color = "#00ff41";
+                injectMemory(mode);
+            }
+        }
+
+        function startAimLogic() {
+            if (!currentMode) return;
+            
+            // Giả lập vòng lặp tìm mục tiêu và chỉnh sửa tọa độ
+            setInterval(() => {
+                // Logic Anti-Ban: Thêm độ trễ ngẫu nhiên và jitter
+                const jitter = (Math.random() - 0.5) * 2; 
+                log(`Scanning... Offset: ${jitter.toFixed(2)} | Lock: ${currentMode}`);
+                
+                // Giả lập việc khóa vào đối tượng
+                if (Math.random() > 0.3) {
+                    log(`Locked onto enemy (${currentMode}).`);
+                }
+            }, 100);
+        }
+
+        function log(msg) {
+            const logDiv = document.getElementById('consoleLog');
+            logDiv.innerHTML = `> ${msg}<br>` + logDiv.innerHTML;
+        }
+
+        // Khởi tạo giả lập
+        log("System initialized.");
+        log("Anti-ban engine loaded.");
+    </script>
+</body>
+</html>
